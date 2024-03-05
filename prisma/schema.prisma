@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Member {
+  memberId  String    @id @default(uuid()) @map("member_id")
+  name      String    @db.VarChar()
+  email     String    @db.VarChar()
+  password  String    @db.VarChar()
+  nickname  String    @db.VarChar()
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  posts     Post[]
+  comments  Comment[]
+}
+
+model Post {
+  postId                 Int       @id @default(autoincrement()) @map("post_id")
+  title                  String    @db.VarChar()
+  description            String    @map("desc") @db.VarChar()
+  isFiltered_title       Boolean   @default(false) @map("is_filtered_title")
+  isFiltered_description Boolean   @default(false) @map("is_filtered_desc")
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime? @updatedAt @map("updated_at")
+  deletedAt              DateTime? @map("deleted_at")
+  Member                 Member    @relation(fields: [memberId], references: [memberId])
+  memberId               String    @map("member_id")
+  comments               Comment[]
+  BadWords               BadWords? @relation(fields: [badWordsId], references: [badWordsId])
+  badWordsId             Int?      @map("bad_words_id")
+}
+
+model Comment {
+  commentId  Int       @id @default(autoincrement()) @map("comment_id")
+  content    String    @db.VarChar()
+  isFiltered Boolean   @default(false) @map("is_filtered")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  Member     Member    @relation(fields: [memberId], references: [memberId])
+  memberId   String    @map("member_id")
+  Post       Post      @relation(fields: [postId], references: [postId])
+  postId     Int       @map("post_id")
+  BadWords   BadWords? @relation(fields: [badWordsId], references: [badWordsId])
+  badWordsId Int?      @map("bad_words_id")
+}
+
+model BadWords {
+  badWordsId Int       @id @default(autoincrement()) @map("bad_words_id")
+  content    String    @db.VarChar()
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  posts      Post[]
+  comments   Comment[]
+}
