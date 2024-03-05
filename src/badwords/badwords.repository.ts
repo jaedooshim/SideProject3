@@ -33,6 +33,10 @@ export class BadWordsRepository {
     });
   }
 
+  async findManyTwo(): Promise<BadWords[]> {
+    return this.badWordsRepository.findMany();
+  }
+
   async findUniqueOrThrow(badWordsId: number): Promise<BadWords> {
     const words = await this.badWordsRepository.findFirst({ where: { badWordsId } });
     if (!words) throw new NotFoundException('해당하는 비속어가 존재하지 않습니다.');

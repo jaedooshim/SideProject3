@@ -35,4 +35,8 @@ export class BadwordsService {
   async findMany(data: IBadWordFindMany) {
     return await this.badWordRepository.findMany(data);
   }
+
+  async findManyTwo(): Promise<BadWords[]> {
+    return await this.badWordRepository.findManyTwo();
+  }
 }

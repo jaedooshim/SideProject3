@@ -30,7 +30,7 @@ export class BadwordsController {
   }
 
   @Get()
-  async findMany(@Query() query: BadWordFindManyDto) {
-    return await this.badWordService.findMany(query);
+  async findMany() {
+    return await this.badWordService.findManyTwo();
   }
 }
